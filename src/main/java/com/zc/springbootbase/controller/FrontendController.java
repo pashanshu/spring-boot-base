@@ -3,6 +3,7 @@ package com.zc.springbootbase.controller;
 import com.zc.springbootbase.bean.Programmer;
 import com.zc.springbootbase.bean.ProgrammerPlus;
 import com.zc.springbootbase.model.Access;
+import com.zc.springbootbase.service.EsService;
 import com.zc.springbootbase.service.TestService;
 import com.zc.springbootbase.thread.ThreadPoolSingleton;
 import org.apache.http.client.HttpClient;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import javax.annotation.Resource;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.*;
@@ -36,8 +38,11 @@ import java.util.concurrent.*;
 public class FrontendController {
     public static final Logger logger = LoggerFactory.getLogger(FrontendController.class);
     final RestTemplate restTemplate;
+
     @Autowired
-    TestService testServiceImpl;
+    private TestService testServiceImpl;
+    @Autowired
+    private EsService esServiceImpl;
 
     @Autowired
     FrontendController(RestTemplateBuilder restTemplateBuilder) {
@@ -158,10 +163,10 @@ public class FrontendController {
     }
 
     @RequestMapping("/asyncCall3")
-    public String asyncCall3(){
+    public String asyncCall3() {
         logger.info("start submit");
         ThreadPoolSingleton.getInstance().executeTask(
-                ()->{
+                () -> {
                     logger.info("start my task");
                     try {
                         Thread.sleep(10000);
@@ -173,6 +178,17 @@ public class FrontendController {
         );
         logger.info("end submit");
         return "success";
+    }
+
+    /**
+     * @Description :
+     * @Author: zc
+     * @Date : 2020/5/12 16:49
+     */
+    @RequestMapping("/callEs")
+    public String callEs() {
+        esServiceImpl.getFromEs();
+        return "SUCCESS";
     }
 
 }
