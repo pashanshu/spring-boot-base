@@ -2,8 +2,15 @@ package com.zc.springbootbase.controller;
 
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
 
 import com.zc.springbootbase.bean.Programmer;
+import com.zc.springbootbase.db.DynamicDataSourceContextHolder;
+import com.zc.springbootbase.model.Access;
+import com.zc.springbootbase.service.TestService;
+import com.zc.springbootbase.service.impl.TestServiceImpl;
+import org.apache.ibatis.io.ResolverUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -15,6 +22,8 @@ import javax.servlet.http.HttpServletResponse;
 @RestController
 public class BackendController {
     private HttpServletResponse response;
+    @Autowired
+    TestService testServiceImpl;
 
     @RequestMapping("/api")
     public String printDate(@RequestHeader(name = "user-name", required = false) String username) {
@@ -49,5 +58,10 @@ public class BackendController {
         return programmer;
     }
 
+    @RequestMapping("/queryid")
+    public List<Access> queryid() {
+        DynamicDataSourceContextHolder.setDataSourceKey("biz");
+        return testServiceImpl.queryAll();
+    }
 
 }

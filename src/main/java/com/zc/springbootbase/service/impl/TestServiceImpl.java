@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -21,14 +22,17 @@ public class TestServiceImpl implements TestService {
 	private static final Logger logger = LoggerFactory.getLogger(TestServiceImpl.class);
 
 	@Resource
-	public AccessMapper accessMapper;
+	AccessMapper accessMapper;
 	@Autowired
 	AnotherService anotherServiceImpl;
 	
 	@Override
 	public List<Access> queryAll() {
 		// TODO Auto-generated method stub
-		return null;
+		Access access =accessMapper.selectByPrimaryKey(1);
+		ArrayList<Access> list = new ArrayList<Access>();
+		list.add(access);
+		return list;
 	}
 
 	@Override
@@ -72,6 +76,7 @@ public class TestServiceImpl implements TestService {
 	 * @Author: zc
 	 * @Date : 2020/4/23 15:14
 	*/
+	@Override
 	@Async("asyncServiceExecutor")
 	public void asyncCall(){
 		logger.info("start executeAsync");
